@@ -5,10 +5,14 @@ import morgan from "morgan";
 import "dotenv/config"
 import MongoStore from "connect-mongo";
 import authrouter from "./controller/auth.js";
+import profileRouter from "./controller/profile.js";
+import gameRouter from "./controller/games.js";
 import users from "./models/users.js";
 import Games from "./models/games.js"; 
+import Profiles from "./models/profiles.js";
 import passUserToRoutes from "./middleware/pass_user_to_view.js";
 import passErrorToView from "./middleware/pass_error_to_view.js";
+
 const app = express();
 
 
@@ -40,6 +44,8 @@ app.get("/", (req, res)=>{
     res.render("index")
 })
 app.use("/auth", authrouter);
+app.use("/profiles", profileRouter);
+app.use("/games", gameRouter);
 //server startup
 
 app.listen(3000,()=>{
