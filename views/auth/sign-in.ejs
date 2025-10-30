@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheet/forms.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello</h1>
+        <g>Enter your details</p>
+        <form action="/auth/sign-in" method="POST">
+            <div class="form-elem">
+                <label for="username">Username</label>
+                <input type="text" name="username" placeholder="Enter username">
+            </div>
+            <div class="form-elem">
+                <label for="password">Password</label>
+                <input type="password" name="password" placeholder="Enter password" required>
+            </div>
+            
+            
+            <button type="submit">Sign in</button>
+        </form>  
+        <p>Or sign up</p>
+        <a href="/auth/sign-up">Sign Up</a>
+        <% if(error){ %>
+            <p class="error-message"><%=error%></p>
+        <% } %>
+    </div>
+    <div id="decoration">
+
+    </div>
+</body>
+</html>
