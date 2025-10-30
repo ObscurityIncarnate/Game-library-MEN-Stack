@@ -6,6 +6,7 @@ import "dotenv/config"
 import MongoStore from "connect-mongo";
 import authrouter from "./controller/auth.js";
 import users from "./models/users.js";
+import Games from "./models/games.js"; 
 import passUserToRoutes from "./middleware/pass_user_to_view.js";
 import passErrorToView from "./middleware/pass_error_to_view.js";
 const app = express();
