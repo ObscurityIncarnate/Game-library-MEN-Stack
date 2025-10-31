@@ -6,7 +6,6 @@ const profiles = new mongoose.Schema({
     wishlistedGames:{type: [mongoose.Schema.Types.ObjectId], ref: "Games"},
     imageCaptures: {type: [String]},
     user: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    isAdmin: {type: Boolean}
 })
 
 const Profiles =  mongoose.model("Profiles", profiles);

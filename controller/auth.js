@@ -23,6 +23,7 @@ router.post("/sign-in",isSignedOut, async (req, res)=>{
         req.session.user = {
             _id: user._id,
             username: user.username
+            
         }
 
         req.session.save(()=>{

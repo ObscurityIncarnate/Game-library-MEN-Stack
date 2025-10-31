@@ -32,9 +32,8 @@ body{
     margin-bottom: 30px;
 }
 .container button[type ="submit"]{
-    background-color: transparent;
-    border: 3px solid black;
-    color: black;
+    background-color: black;
+    color: white;
     padding: 10px;
     border-radius: 16px;
     width: 340px;

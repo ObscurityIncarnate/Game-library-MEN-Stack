@@ -1,0 +1,23 @@
+<nav>
+    <div>
+    <a href="/games">Browse Collections</a>
+    <a href="">Search Profiles</a>
+    <% if(user){ %>
+    <a href=""> Favourites</a>
+        <% if(user.isAdmin) {%>
+            <a href="/games/new">New Game</a>
+        <% } %>
+    </div>
+    <div>
+    <a href="/auth/sign-out">Sign ut</a>
+    <a href="/profile">Profile</a> 
+    </div>
+    <% }else{ %>
+    </div>
+    <div>
+    <a href="/auth/sign-in">Sign In</a>
+    <a href="/auth/sign-up">Sign Up</a>
+    </div>
+    
+    <% } %>
+</nav>

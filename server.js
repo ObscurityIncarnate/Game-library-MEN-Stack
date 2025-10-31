@@ -44,7 +44,7 @@ app.get("/", (req, res)=>{
     res.render("index")
 })
 app.use("/auth", authrouter);
-app.use("/profiles", profileRouter);
+app.use("/profile", profileRouter);
 app.use("/games", gameRouter);
 //server startup
 
