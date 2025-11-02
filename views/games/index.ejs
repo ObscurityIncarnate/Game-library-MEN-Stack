@@ -4,10 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="/stylesheet/gameIndex.css">
     <title>Document</title>
 </head>
 <body>
     <%- include("../../partials/_navbar.ejs") %>
+    <% games.forEach(game => {%>
+        <div class="gameContainer">
+            <div class="gameBackground">
+                <img src="<%= game.backgroundImage %>" alt="">
+            </div>
+            <div>
+                <p><%= game.name %></p>
+                <img src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
+            </div>
+        </div>
+    <%}); %>
     <h1></h1>
 </body>
 </html>

@@ -12,7 +12,7 @@ import Games from "./models/games.js";
 import Profiles from "./models/profiles.js";
 import passUserToRoutes from "./middleware/pass_user_to_view.js";
 import passErrorToView from "./middleware/pass_error_to_view.js";
-
+import passMessageToView from "./middleware/pass_message_to_view.js";
 const app = express();
 
 
@@ -31,6 +31,7 @@ app.use(session({
 
 app.use(passUserToRoutes);
 app.use(passErrorToView);
+app.use(passMessageToView)
 const connect = ()=>{
     try {
         mongoose.connect(process.env.MONGODB_URI);
@@ -47,6 +48,7 @@ app.use("/auth", authrouter);
 app.use("/profile", profileRouter);
 app.use("/games", gameRouter);
 //server startup
+
 
 app.listen(3000,()=>{
     console.log("Server running on port 3000")
