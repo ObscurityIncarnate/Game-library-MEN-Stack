@@ -7,6 +7,10 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <% if(user.isAdmin){ %>
+    <a href="/games/<%= game._id%>/Edit">Edit game</a>
+    <a href="/games/<%= game._id%>/Delete">Edit game</a>
+
+    <% } %>
 </body>
 </html>

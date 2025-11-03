@@ -9,8 +9,10 @@
 <body>
     <%- include("../partials/_navbar.ejs") %>
     <h1>Homepage</h1>
+    <% if(user) {%>
+    <h1>Hello <%=user.username  %></h1>
     <a href="/games/new">New game</a>
-    <a href="/games/edit">Edit game</a>
+    <% } %>
     <a href=""></a>
     <a href=""></a>
 </body>

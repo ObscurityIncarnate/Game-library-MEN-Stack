@@ -1,5 +1,8 @@
 import express from "express";
 import Games from "../models/games.js";
+import isAdmin from "../middleware/is_admin.js";
+import isSignedIn from "../middleware/is_signed_in.js";
+isSignedIn
 const router =  express.Router();
 
 router.get("/", async(req,res)=>{
@@ -11,15 +14,27 @@ router.get("/", async(req,res)=>{
     }
     
 });
-router.get("/new", (req,res)=>{
+router.post("/", isSignedIn, isAdmin, async(req,res)=> {
+    console.log(req.body);
+    try {
+        req.body.gallery =req.body.gallery.split(",")
+        req.body.reviews = [];
+        await Games.create(req.body);
+        res.redirect("/games");
+        res.locals.message(`${req.body.name} has been successfully created`)
+    } catch (error) {
+        res.render("/games/new",{error: error.message})   
+    }
+})
+router.get("/new",isSignedIn, isAdmin, (req,res)=>{
     res.render("games/new");
 });
-router.get("/show/:gameId", async (req,res)=>{
+router.get("/:gameId", isSignedIn, async (req,res)=>{
     try {
         const gameId =  req.params.gameId;
         const game = await Games.findById(gameId);
         if(game){
-            res.render("games/new");
+            res.render("games/show");
         }else{
             throw new Error("Couldnt find the game you were looking for");
         }
@@ -29,19 +44,21 @@ router.get("/show/:gameId", async (req,res)=>{
     }
     
 });
-
-router.post("/", async(req,res)=> {
-    console.log(req.body);
+router.get("/:gameId/delete", isSignedIn, isAdmin, async (req,res) => {
     try {
-        req.body.reviews = [];
-        await Games.create(req.body);
-        res.redirect("/games");
-        res.locals.message(`${req.body.name} has been successfully created`)
+        const gameId =  req.params.gameId;
+        const game =  await Games.findById(gameId);
+        if(game){
+            await Games.findByIdAndDelete(gameId);
+            req.loc.message = `Successfully deleted ${gameId}`;
+            res.render("/games", {})
+        }else{
+            throw new Error("Couldnt find the game you were looking for")
+        }
     } catch (error) {
-        res.render("/games/new",{error: error.message})   
+        
     }
-    
-
-    
 })
+
+
 export default router 

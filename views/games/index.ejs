@@ -9,16 +9,22 @@
 </head>
 <body>
     <%- include("../../partials/_navbar.ejs") %>
+    <h1>All Games</h1>
+
+    <div></div>
     <% games.forEach(game => {%>
-        <div class="gameContainer">
-            <div class="gameBackground">
-                <img src="<%= game.backgroundImage %>" alt="">
+        <a href="/games/<%= game._id %>">
+            <div class="gameContainer">
+                <div class="gameBackground">
+                    <img src="<%= game.backgroundImage %>" alt="">
+                </div>
+                <div>
+                    <p><%= game.name %></p>
+                    <img src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
+                </div>
             </div>
-            <div>
-                <p><%= game.name %></p>
-                <img src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
-            </div>
-        </div>
+        </a>
+        
     <%}); %>
     <h1></h1>
 </body>

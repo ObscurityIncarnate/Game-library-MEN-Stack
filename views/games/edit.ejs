@@ -3,10 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="/stylesheet/auth.css">
     <title>Document</title>
 </head>
 <body>
+    <h1>
+        Edit game
+    </h1>
+    <div class="container">
+        <form action="/games" method="POST">
+            <div class="form-elem">
+                <label for="name">Game Name</label>
+                <input type="text" name="name" id="" required>
+            </div>
+            <div class="form-elem">
+                <label for="gameIcon">Add game Icon</label>
+                <input type="text" name="gameIcon">
+            </div>
+            <div class="form-elem">
+                <label for="backgroundImage">Add game page background Image</label>
+                <input type="text" name="backgroundImage">
+            </div>
+            <div class= "form-elem" id="gallery-div">
+                <label for="gallery">More media </label>
+                <input type="text" name="gallery" id="gallery-input">
+            </div>
+            <div class="form-elem">
+                <button type="button" id="addMedia">Add another image</button>
+            </div>
+            
+            
+            <button type="submit">Submit</button>
+
+        </form>
+
+    </div>
     
 </body>
+<script>
+    const inputElem = document.querySelector("#gallery-input");
+    const divElem =  document.querySelector("#gallery-div")
+    const buttonElem = document.querySelector("#addMedia");
+    let gallery = [];
+    buttonElem.addEventListener("click",()=>{
+        console.log(inputElem.value);
+        if(inputElem.value ==""){
+            return;
+        }
+        const newMedia = document.createElement("div");
+        newMedia.textContent = inputElem.value;
+        newMedia.classList.add("imageLink")
+        const buttonIcon = document.createElement("i");
+        buttonIcon.classList.add("fa","fa-trash");
+        buttonIcon.ariaHidden=true;
+        newMedia.addEventListener("click", ()=>{
+            newMedia.remove()
+            const border = gallery.indexOf(newMedia.textContent);
+            gallery.splice(border, 1);
+            console.log(gallery)
+        })
+        newMedia.append(buttonIcon);
+        divElem.append(newMedia);
+        gallery.push(inputElem.value);
+        inputElem.value = "";   
+    });
+    const submitElem = document.querySelector("button[type='Submit']");
+    submitElem.addEventListener("click", ()=>{
+        inputElem.value = gallery
+    })
+</script>
 </html>

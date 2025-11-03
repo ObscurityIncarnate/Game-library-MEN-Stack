@@ -1,5 +1,9 @@
 const passMessageToView = (req, res, next)=>{
-    res.locals.message = "";
+    if(req.session.message){
+        res.locals.message = req.session.message;
+        req.session.message = null;
+    }
+ 
     next();
 }
 
