@@ -2,9 +2,12 @@ import express from "express";
 import Games from "../models/games.js";
 import isAdmin from "../middleware/is_admin.js";
 import isSignedIn from "../middleware/is_signed_in.js";
+import { cloudinary, uploadBuffer } from "../config/cloudinary.js";
+import multer from "multer";
 
 const router =  express.Router();
-
+const upload = multer({storage: multer.memoryStorage()});
+const uploadMiddleware = upload.fields([{name: "gameIcon", maxCount: 1}, {name:"backgroundImage", maxCount: 1}, {name: "gallery", maxCount: 8}]);
 router.get("/", async(req,res)=>{
     try {
         const games  = await Games.find();
@@ -18,11 +21,32 @@ router.get("/", async(req,res)=>{
     }
     
 });
-router.post("/", isSignedIn, isAdmin, async(req,res)=> {
+router.post("/", isSignedIn, isAdmin, uploadMiddleware, async(req,res)=> {
     console.log(req.body);
     try {
-        req.body.gallery =req.body.gallery.split(",")
-        console.log(req.body.gallery);
+        console.log(req.files)
+        // let gameIconUrl;
+        // let gameBackgroundUrl;
+        // let galleryUrl;
+        if(req.files.gameIcon){
+            const  uploadResult = await uploadBuffer(req.files.gameIcon[0].buffer)
+            console.log(uploadResult)
+            req.body.gameIcon= uploadResult.secure_url;
+        }
+        if(req.files.backgroundImage){
+            const  uploadResult = await uploadBuffer(req.files.backgroundImage[0].buffer)
+            console.log(uploadResult)
+            req.body.gameBackgroundUrl = uploadResult.secure_url;
+        }
+        if(req.files.gallery && req.files.gallery.length > 0){
+            const uploadResponses =  await Promise.all(req.files.gallery.map(imageFile => uploadBuffer(imageFile.buffer)));
+            console.log(uploadResponses)
+            req.body.gallery=uploadResponses.map(response => response.secure_url);
+        }
+        // req.body.gameIcon = gameIconUrl;
+        // req.body.gameBackgroundUrl = gameBackgroundUrl;
+        // req.body.gallery =galleryUrl;
+        console.log(req.body);
         console.log(typeof req.body.gallery)
         await Games.create(req.body);
         req.session.message = `${req.body.name} has been successfully created`;

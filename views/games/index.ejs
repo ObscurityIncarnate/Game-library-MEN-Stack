@@ -19,8 +19,9 @@
                             <img src="<%= game.backgroundImage %>" alt="">
                         </div>
                         <div>
+                            <img class="logo" src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
                             <p><%= game.name %></p>
-                            <img src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
+                            
                         </div>
                     </div>
                 </a>
@@ -30,16 +31,28 @@
     </div>
     
     <% if(message){ %>
-        <div id="message">
+        <div class="message">
             <p>
                <%= message%> 
             </p>
-            <button id="clearMessage">
+            <button class="clearMessage">
                 
                 <i class="fa fa-times" aria-hidden="true"></i>
             </button>
         </div>
 
+    <% } else if(error){%>
+        <div class="error">
+            <p>
+               <%= error%> 
+            </p>
+            <button class="clearMessage">
+                
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    
+    
     <% } %>   
 </body>
 <script>

@@ -9,22 +9,22 @@
 <body>
     <h1>New Game</h1>
     <div class="container">
-        <form action="/games" method="POST">
+        <form action="/games" method="POST" enctype="multipart/form-data">
             <div class="form-elem">
                 <label for="name">Game Name</label>
                 <input type="text" name="name" id="" required>
             </div>
             <div class="form-elem">
                 <label for="gameIcon">Add game Icon</label>
-                <input type="text" name="gameIcon">
+                <input type="file" name="gameIcon">
             </div>
             <div class="form-elem">
                 <label for="backgroundImage">Add game page background Image</label>
-                <input type="text" name="backgroundImage">
+                <input type="file" name="backgroundImage">
             </div>
             <div class= "form-elem" id="gallery-div">
                 <label for="gallery">More media </label>
-                <input type="text" name="gallery" id="gallery-input">
+                <input type="file" name="gallery" id="gallery-input" multiple>
             </div>
             <div class="form-elem">
                 <button type="button" id="addMedia">Add another image</button>
@@ -40,35 +40,35 @@
 
 </body>
 <script>
-    const inputElem = document.querySelector("#gallery-input");
-    const divElem =  document.querySelector("#gallery-div")
-    const buttonElem = document.querySelector("#addMedia");
-    let gallery = [];
-    buttonElem.addEventListener("click",()=>{
-        console.log(inputElem.value);
-        if(inputElem.value ==""){
-            return;
-        }
-        const newMedia = document.createElement("div");
-        newMedia.textContent = inputElem.value;
-        newMedia.classList.add("imageLink")
-        const buttonIcon = document.createElement("i");
-        buttonIcon.classList.add("fa","fa-trash");
-        buttonIcon.ariaHidden=true;
-        newMedia.addEventListener("click", ()=>{
-            newMedia.remove()
-            const border = gallery.indexOf(newMedia.textContent);
-            gallery.splice(border, 1);
-            console.log(gallery)
-        })
-        newMedia.append(buttonIcon);
-        divElem.append(newMedia);
-        gallery.push(inputElem.value);
-        inputElem.value = "";   
-    });
-    const submitElem = document.querySelector("button[type='Submit']");
-    submitElem.addEventListener("click", ()=>{
-        inputElem.value = gallery
-    })
+    // const inputElem = document.querySelector("#gallery-input");
+    // const divElem =  document.querySelector("#gallery-div")
+    // const buttonElem = document.querySelector("#addMedia");
+    // let gallery = [];
+    // buttonElem.addEventListener("click",()=>{
+    //     console.log(inputElem.value);
+    //     if(inputElem.value ==""){
+    //         return;
+    //     }
+    //     const newMedia = document.createElement("div");
+    //     newMedia.textContent = inputElem.value;
+    //     newMedia.classList.add("imageLink")
+    //     const buttonIcon = document.createElement("i");
+    //     buttonIcon.classList.add("fa","fa-trash");
+    //     buttonIcon.ariaHidden=true;
+    //     newMedia.addEventListener("click", ()=>{
+    //         newMedia.remove()
+    //         const border = gallery.indexOf(newMedia.textContent);
+    //         gallery.splice(border, 1);
+    //         console.log(gallery)
+    //     })
+    //     newMedia.append(buttonIcon);
+    //     divElem.append(newMedia);
+    //     gallery.push(inputElem.value);
+    //     inputElem.value = "";   
+    // });
+    // const submitElem = document.querySelector("button[type='Submit']");
+    // submitElem.addEventListener("click", ()=>{
+    //     inputElem.value = gallery
+    // })
 </script>
 </html>
