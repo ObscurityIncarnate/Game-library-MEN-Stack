@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheet/auth.css">
+    <link rel="stylesheet" href="/stylesheet/forms.css">
+
     <title>Document</title>
 </head>
 <body>
@@ -11,18 +12,18 @@
         Edit game
     </h1>
     <div class="container">
-        <form action="/games" method="POST">
+        <form action="/games/<%= game._id %>/edit" method="POST">
             <div class="form-elem">
                 <label for="name">Game Name</label>
-                <input type="text" name="name" id="" required>
+                <input type="text" name="name" id="" value="<%= game.name  %>" required>
             </div>
             <div class="form-elem">
                 <label for="gameIcon">Add game Icon</label>
-                <input type="text" name="gameIcon">
+                <input type="text" name="gameIcon" value="<%= game.gameIcon  %>">
             </div>
             <div class="form-elem">
                 <label for="backgroundImage">Add game page background Image</label>
-                <input type="text" name="backgroundImage">
+                <input type="text" name="backgroundImage" value="<%= game.backgroundImage  %>">
             </div>
             <div class= "form-elem" id="gallery-div">
                 <label for="gallery">More media </label>
@@ -41,10 +42,29 @@
     
 </body>
 <script>
+    
     const inputElem = document.querySelector("#gallery-input");
     const divElem =  document.querySelector("#gallery-div")
     const buttonElem = document.querySelector("#addMedia");
-    let gallery = [];
+    let gallery = '<%=game.gallery%>' ;
+    gallery = gallery.split(",")
+    console.log( gallery)
+    gallery.forEach((image) => {
+        const newMedia = document.createElement("div");
+        newMedia.textContent = image;
+        newMedia.classList.add("imageLink")
+        const buttonIcon = document.createElement("i");
+        buttonIcon.classList.add("fa","fa-trash");
+        buttonIcon.ariaHidden=true;
+        newMedia.addEventListener("click", ()=>{
+            newMedia.remove()
+            const border = gallery.indexOf(newMedia.textContent);
+            gallery.splice(border, 1);
+            console.log(gallery)
+        })
+        newMedia.append(buttonIcon);
+        divElem.append(newMedia);
+    });
     buttonElem.addEventListener("click",()=>{
         console.log(inputElem.value);
         if(inputElem.value ==""){

@@ -1,3 +1,4 @@
+@import url('../font-awesome-4.7.0/css/font-awesome.min.css');
 .gameContainer{
     width: 250px;
     height: 250px;
@@ -5,4 +6,17 @@
 }
 .gameBackground{
     height: 50%;
+}
+#message{
+    position: fixed;
+    z-index: 2;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    bottom: 50px;
+}
+
+#games{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }

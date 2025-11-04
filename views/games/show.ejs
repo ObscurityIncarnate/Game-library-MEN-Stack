@@ -4,13 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="/stylesheet/showGame.css">
     <title>Document</title>
 </head>
 <body>
+    <div id="page-content">
     <% if(user.isAdmin){ %>
-    <a href="/games/<%= game._id%>/Edit">Edit game</a>
-    <a href="/games/<%= game._id%>/Delete">Edit game</a>
-
+        <a href="/games/<%= game._id%>/Edit">Edit game</a>
+        <a href="/games/<%= game._id%>/review">Add review</a>
+        <button type="button" id="delete">Delete game</button>  
     <% } %>
+    </div>
+    <div id="popup">
+        <div class="alert-box">
+            <form action="/games/<%=game._id%>/delete" method="post" id>
+                <p>Are you sure you want to delete this game?</p>
+                <div class="buttons">
+                    <button type="button" id="hide">Cancel</button>
+                    <button type="submit">Delete</button>  
+                </div>
+            
+            </form>
+        </div>
+        
+    </div>
 </body>
+<script>
+    const deleteElem = document.querySelector("#delete");
+    const popupElem = document.querySelector("#popup");
+    const hideElem = document.querySelector("#hide")
+    deleteElem.addEventListener("click", ()=>{
+        popupElem.style.visibility = "visible";
+    });  
+    hideElem.addEventListener("click", ()=>{
+        popupElem.style.visibility = "hidden";
+    });
+    popupElem.addEventListener("click", (event)=>{
+        console.log()
+        if(event.target.id == "popup"){
+            popupElem.style.visibility = "hidden";
+        }        
+    })
+</script>
 </html>

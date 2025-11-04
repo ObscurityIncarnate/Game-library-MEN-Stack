@@ -9,23 +9,47 @@
 </head>
 <body>
     <%- include("../../partials/_navbar.ejs") %>
-    <h1>All Games</h1>
-
-    <div></div>
-    <% games.forEach(game => {%>
-        <a href="/games/<%= game._id %>">
-            <div class="gameContainer">
-                <div class="gameBackground">
-                    <img src="<%= game.backgroundImage %>" alt="">
-                </div>
-                <div>
-                    <p><%= game.name %></p>
-                    <img src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
-                </div>
-            </div>
-        </a>
+    <div id="page-content">
+        <h1>All Games</h1>
+        <div id="games">
+            <% games.forEach(game => {%>
+                <a href="/games/<%= game._id %>">
+                    <div class="gameContainer">
+                        <div class="gameBackground">
+                            <img src="<%= game.backgroundImage %>" alt="">
+                        </div>
+                        <div>
+                            <p><%= game.name %></p>
+                            <img src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
+                        </div>
+                    </div>
+                </a>
+            <%}); %>
+        </div>
         
-    <%}); %>
-    <h1></h1>
+    </div>
+    
+    <% if(message){ %>
+        <div id="message">
+            <p>
+               <%= message%> 
+            </p>
+            <button id="clearMessage">
+                
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+
+    <% } %>   
 </body>
+<script>
+    const clearButton = document.querySelector("#clearMessage");
+    const divElem = document.querySelector("#message");
+    if(clearButton){
+        clearButton.addEventListener("click", ()=>{
+            divElem.style.visibility =  "hidden";
+        })
+    }
+    
+</script>
 </html>
