@@ -14,6 +14,44 @@
         <a href="/games/<%= game._id%>/review">Add review</a>
         <button type="button" id="delete">Delete game</button>  
     <% } %>
+        <h2>Reviews</h2>
+        <button type="button" id="addReview">Leave Review</button>
+        <form action="/games/<%=game._id%>/review" method="post" id="reviewForm">
+            <textarea name="description" id="">
+
+            </textarea>
+            <input type="number" id="ratingInput" name="rating"  max="5" min="1" value="1" required>
+            <div>
+                <p>How much would you recommend</p>
+                <i class="fa fa-star-o starSelector"></i>
+                <i class="fa fa-star-o starSelector"></i>
+                <i class="fa fa-star-o starSelector"></i>
+                <i class="fa fa-star-o starSelector"></i>
+                <i class="fa fa-star-o starSelector"></i>
+            </div>
+            <button type="button" id="hideForm"> Cancel</button>
+            <button type="submit">Submit</button>
+        </form>
+        
+        <div>
+            <% game.reviews.forEach((review)=>{%>
+                <div>
+                    <p><%=review.userId%></p>
+                    <div>
+                        <% for(let i=0; i<5; i++){ %>
+                            <%if(i<review.rating ){%>
+                                <i class="fa fa-star"></i>
+                            <%}else{ %>
+                                <i class="fa fa-star-o"></i><% 
+                            } %>
+                        <%}%>
+                    </div>
+                    <div>
+                        <p><%=review.description%></p>
+                    </div>
+                </div>
+            <%}) %>
+        </div>
     </div>
     <div id="popup">
         <div class="alert-box">
@@ -32,7 +70,7 @@
 <script>
     const deleteElem = document.querySelector("#delete");
     const popupElem = document.querySelector("#popup");
-    const hideElem = document.querySelector("#hide")
+    const hideElem = document.querySelector("#hide");
     deleteElem.addEventListener("click", ()=>{
         popupElem.style.visibility = "visible";
     });  
@@ -45,5 +83,42 @@
             popupElem.style.visibility = "hidden";
         }        
     })
+
+    const reviewButton = document.querySelector("#addReview");
+    const reviewForm = document.querySelector("#reviewForm");
+    const hideForm =  document.querySelector("#hideForm")
+    reviewButton.addEventListener("click", ()=>{
+        reviewForm.style.display=  "block";
+    });
+    hideForm.addEventListener("click", ()=>{
+        reviewForm.style.display = "none";
+    })
+
+
+    //rating
+    const ratingInput = document.querySelector("#ratingInput");
+    const starElems =  document.querySelectorAll(".starSelector");
+    starElems.forEach((star, index)=>{
+        star.addEventListener("click",()=>{
+
+            const target =  index+1;
+            let ctr =  0;
+            
+            starElems.forEach((star)=>{
+                if(ctr< target){
+                    star.classList.replace("fa-star-o", "fa-star");
+                    ctr++
+                }else{
+                    star.classList.replace("fa-star", "fa-star-o");
+                }
+                
+            })
+            ratingInput.value =  target;
+            console.log(ratingInput.value);
+        })
+
+    })
+    
+
 </script>
 </html>

@@ -65,6 +65,7 @@ router.post("/", isSignedIn, isAdmin, uploadMiddleware, async(req,res)=> {
 router.get("/new",isSignedIn, isAdmin, (req,res)=>{
     res.render("games/new");
 });
+
 router.get("/:gameId", isSignedIn, async (req,res)=>{
     try {
         const gameId =  req.params.gameId;
@@ -86,6 +87,23 @@ router.get("/:gameId", isSignedIn, async (req,res)=>{
     }
     
 });
+router.post("/:gameId/review", isSignedIn, async (req,res) => {
+     
+    try {
+        const gameId =  req.params.gameId;
+        const game = await Games.findById(gameId);
+        if(game){
+            req.body.userId =  req.session.user._id
+            game.reviews.push(req.body);
+            game.save(res.redirect(`/games/${gameId}`))
+        }else{
+            throw new Error("Couldnt find the content you were looking for ")
+        }
+       console.log(req.body)    
+    } catch (error) {
+        
+    }
+})
 router.post("/:gameId/delete", isSignedIn, isAdmin, async (req,res) => {
     try {
         const gameId =  req.params.gameId;

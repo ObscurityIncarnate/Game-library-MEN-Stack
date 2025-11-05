@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const reviews =  new mongoose.Schema({
-    userId: {type: mongoose.Schema.Types.ObjectId, res:"User"},
-    rating: {type: Number},
+    userId: {type: mongoose.Schema.Types.ObjectId, res:"User", required: true},
+    rating: {type: Number, required: true},
     description: {type: String}
 })
 const games = new mongoose.Schema({
