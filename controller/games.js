@@ -4,10 +4,21 @@ import isAdmin from "../middleware/is_admin.js";
 import isSignedIn from "../middleware/is_signed_in.js";
 import { cloudinary, uploadBuffer } from "../config/cloudinary.js";
 import multer from "multer";
-
+import Users from "../models/users.js";
 const router =  express.Router();
 const upload = multer({storage: multer.memoryStorage()});
 const uploadMiddleware = upload.fields([{name: "gameIcon", maxCount: 1}, {name:"backgroundImage", maxCount: 1}, {name: "gallery", maxCount: 8}]);
+
+
+const findNameFromId =  async(reviews)=>{
+    const reviewNames = {};
+    await Promise.all(reviews.map(async (review)=>{
+        const user = await Users.findById(review.userId);
+        reviewNames[review.userId] = user.username;
+    }))
+    return reviewNames
+}
+
 router.get("/", async(req,res)=>{
     try {
         const games  = await Games.find();
@@ -72,7 +83,9 @@ router.get("/:gameId", isSignedIn, async (req,res)=>{
         const game = await Games.findById(gameId);
         if(game){
             console.log(game)
-            res.render("games/show", {game});
+            const reviewNames = await findNameFromId(game.reviews)
+            console.log(reviewNames);
+            res.render("games/show", {game, reviewNames});
         }else{
             throw new Error("Couldnt find the game you were looking for");
         }

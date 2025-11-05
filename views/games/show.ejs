@@ -36,7 +36,13 @@
         <div>
             <% game.reviews.forEach((review)=>{%>
                 <div>
-                    <p><%=review.userId%></p>
+                    <div>
+                        <p><%=reviewNames[review.userId]%></p>
+                        <% if(review.userId == user._id) {%>
+                            <i class="fa fa-ellipsis-v"></i>
+                        <% } %>
+                    </div>
+                    
                     <div>
                         <% for(let i=0; i<5; i++){ %>
                             <%if(i<review.rating ){%>
@@ -89,9 +95,11 @@
     const hideForm =  document.querySelector("#hideForm")
     reviewButton.addEventListener("click", ()=>{
         reviewForm.style.display=  "block";
+        reviewButton.style.display = "none";
     });
     hideForm.addEventListener("click", ()=>{
         reviewForm.style.display = "none";
+        reviewButton.style.display = "block";
     })
 
 
