@@ -13,7 +13,7 @@
     </h1>
     <div class="container">
         
-        <form action="/games/<%= game._id %>?_method=PUT" method="POST">
+        <form action="/games/<%= game._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
             <div class="form-elem" id="nameDiv">
                 <label for="name">Game Name</label>
                 <input type="text" name="name" value="<%= game.name%>"  required>

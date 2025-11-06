@@ -18,7 +18,9 @@ nav{
     z-index: 2;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-color: white;
     bottom: 50px;
+    box-sizing: border-box;
 }
 .message p, .error p{
     padding: 5px;
@@ -26,7 +28,8 @@ nav{
 .message button, .error button{
     border: hidden;
     border-left: 2px solid black;
-    background-color: transparent;
+    background-color: white;
+    border-radius: 0px 15px 15px 0px;
 }
 
 .logo{

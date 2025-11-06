@@ -114,12 +114,28 @@ router.delete("/:gameId", isSignedIn, isAdmin, async (req,res) => {
         res.redirect(`/games/${gameId}`);
     }
 })
-router.put("/:gameId", isSignedIn, isAdmin, async (req,res) => {
-    
+router.put("/:gameId", isSignedIn, isAdmin,uploadMiddleware, async (req,res) => {
+    console.log("here")
+    const gameId =  req.params.gameId;
     try {
-        const gameId =  req.params.gameId;
+    
+        console.log(req.files)
+        if(req.files.gameIcon){
+            const  uploadResult = await uploadBuffer(req.files.gameIcon[0].buffer)
+            console.log(uploadResult)
+            req.body.gameIcon= uploadResult.secure_url;
+        }
+        if(req.files.backgroundImage){
+            const  uploadResult = await uploadBuffer(req.files.backgroundImage[0].buffer)
+            console.log(uploadResult)
+            req.body.gameBackgroundUrl = uploadResult.secure_url;
+        }
+        if(req.files.gallery && req.files.gallery.length > 0){
+            const uploadResponses =  await Promise.all(req.files.gallery.map(imageFile => uploadBuffer(imageFile.buffer)));
+            console.log(uploadResponses)
+            req.body.gallery=uploadResponses.map(response => response.secure_url);
+        }
         console.log(req.body);
-        req.body.gallery  = req.body.gallery.split(",");
         await Games.findByIdAndUpdate(gameId, req.body);
         req.session.message = `Successfully Updated ${req.body.name}`;
         res.redirect("/games")
