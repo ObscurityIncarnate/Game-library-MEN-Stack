@@ -77,7 +77,7 @@ router.get("/new",isSignedIn, isAdmin, (req,res)=>{
     res.render("games/new");
 });
 
-router.get("/:gameId", isSignedIn, async (req,res)=>{
+router.get("/:gameId", async (req,res)=>{
     try {
         const gameId =  req.params.gameId;
         const game = await Games.findById(gameId);
@@ -135,6 +135,7 @@ router.get("/:gameId/edit", isSignedIn, isAdmin, async (req, res) => {
         const gameId  = req.params.gameId;
         const game= await Games.findById(gameId);
         if(game){
+            console.log(game)
             res.render("games/edit",{game});
         }else{
             const error = new Error("Couldnt find the game you were looking for");

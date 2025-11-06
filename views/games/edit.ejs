@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/stylesheet/forms.css">
-    <script defer src="/js/messagehide.js"></script>
+    <link rel="stylesheet" href="/stylesheet/edit-page.css">
+
     <title>Document</title>
 </head>
 <body>
@@ -12,27 +12,38 @@
         Edit game
     </h1>
     <div class="container">
+        
         <form action="/games/<%= game._id %>?_method=PUT" method="POST">
-            <div class="form-elem">
+            <div class="form-elem" id="nameDiv">
                 <label for="name">Game Name</label>
-                <input type="text" name="name" id="" value="<%= game.name  %>" required>
+                <input type="text" name="name" value="<%= game.name%>"  required>
             </div>
-            <div class="form-elem">
+            <div class="form-elem" id="iconDiv">
                 <label for="gameIcon">Add game Icon</label>
-                <input type="text" name="gameIcon" value="<%= game.gameIcon  %>">
+                <div class="preview">
+                    <p>Current Icon</p>
+                    <img src="" alt="Game Icon">
+                </div>
+                <input type="file" name="gameIcon" value=""  accept="image/*">
+
+                
+
             </div>
-            <div class="form-elem">
+            <div class="form-elem" id="backgroundImageDiv">
                 <label for="backgroundImage">Add game page background Image</label>
-                <input type="text" name="backgroundImage" value="<%= game.backgroundImage  %>">
+                <div class="preview">
+                    <p>Current Icon:</p>
+                    <img src="" alt="Game Icon" style="max-width: 150px;"> 
+                </div>
+                <input type="file" name="backgroundImage" value="" accept="image/*">
             </div>
             <div class= "form-elem" id="gallery-div">
                 <label for="gallery">More media </label>
-                <input type="text" name="gallery" id="gallery-input">
+                <input type="file" name="gallery" id="gallery-input" accept="image/*" multiple>
             </div>
             <div class="form-elem">
                 <button type="button" id="addMedia">Add another image</button>
             </div>
-            
             
             <button type="submit">Submit</button>
 
@@ -42,7 +53,53 @@
     <%- include("../../partials/_message.ejs") %>
 </body>
 <script>
-    
+    const game =  <%-JSON.stringify(game)%>;
+    const iconDiv = document.querySelector("#iconDiv");
+    if(game.gameIcon){
+        const preview = iconDiv.children[1];
+        preview.style.display = "block";
+        const previewImage = preview.children[1];
+        previewImage.src = game.gameIcon;
+    }
+    const iconSelect = iconDiv.children[2];
+    iconSelect.addEventListener("change", ()=>{
+        
+        const preview = iconDiv.children[1];
+        preview.style.display = "block";
+        const previewImage = preview.children[1];
+        const file = iconSelect.files[0];
+        if(file){
+            previewImage.src =  URL.createObjectURL(file)  ;
+        }
+        
+    })
+
+    const backgroundImageDiv = document.querySelector("#backgroundImageDiv");
+
+     if(game.backgroundImage){
+        const preview = backgroundImageDiv.children[1];
+        preview.style.display = "block";
+        const previewImage = preview.children[1];
+        previewImage.src = game.backgroundImage;
+    }
+    const backgroundSelect = backgroundImageDiv.children[2];
+    backgroundSelect.addEventListener("change", ()=>{
+        
+        const preview = backgroundImageDiv.children[1];
+        preview.style.display = "block";
+        const previewImage = preview.children[1];
+        const file = backgroundSelect.files[0];
+        if(file){
+            previewImage.src =  URL.createObjectURL(file)  ;
+        }
+        
+    })
+
+
+
+
+    console.log(iconDiv, backgroundImageDiv);
+
     const inputElem = document.querySelector("#gallery-input");
     const divElem =  document.querySelector("#gallery-div")
     const buttonElem = document.querySelector("#addMedia");

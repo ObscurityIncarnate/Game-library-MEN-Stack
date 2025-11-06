@@ -11,11 +11,11 @@
 <body>
     <%- include("../../partials/_navbar.ejs") %>
     <div id="page-content">
-        <img src="<%= game. %>" alt="">
-    <% if(user.isAdmin){ %>
-        <a href="/games/<%= game._id%>/Edit">Edit game</a>
-        <button type="button" id="delete">Delete game</button>  
-    <% } %>
+        <img src="<%= game.backgroundImage %>" alt="">
+        <% if(user && user.isAdmin){ %>
+            <a href="/games/<%= game._id%>/Edit">Edit game</a>
+            <button type="button" id="delete">Delete game</button>  
+        <% } %>
         <h2>Reviews</h2>
         <button type="button" id="addReview">Leave Review</button>
         <form action="/games/<%=game._id%>/review/create" method="POST" id="reviewForm">
@@ -35,16 +35,20 @@
             <button type="submit">Submit</button>
         </form>
         
-        <div>
+        <div class="reviews">
             <% game.reviews.forEach((review)=>{%>
                 <div class="review">
                     <div class="reviewHead">
                         <p><%=reviewNames[review.userId]%></p>
-                        <%console.log("review user:", review.userId, "session User", user._id, "equals", review.userId == user._id)  %>
-                        <% if(review.userId.equals(user._id)) {%>
-                            <i class="fa fa-ellipsis-v reviewSettings"></i>
+                        <% if(user){%>
+                            <%console.log("review user:", review.userId, "session User", user._id, "equals", review.userId == user._id)  %>
+                            <% if(review.userId.equals(user._id)) {%>
+                                <i class="fa fa-ellipsis-v reviewSettings"></i>
 
-                        <% } %>
+                            <% } %>
+
+                        <%} %>
+                        
                     </div>
                     <div class="reviewOptions">
                         <div id="showReviewDelForm">Delete</div>
@@ -80,7 +84,8 @@
     </div>
       <%- include("../../partials/_message.ejs") %>
 </body>
-<script>
+<%if(user){%>
+    <script>
     const deleteElem = document.querySelector("#delete");
     const popupElem = document.querySelector("#popup");
     const hideElem = document.querySelector("#hide");
@@ -140,6 +145,7 @@
     })
     
     //delete rating
+   
     const reviews =  document.querySelectorAll(".review");
     const reviewObject = <%-JSON.stringify(game.reviews)%>;
     console.log(typeof reviewObject, reviewObject)
@@ -182,5 +188,7 @@
 
 
 
-</script>
+</script>    
+<%}%>
+
 </html>
