@@ -139,7 +139,13 @@
     
     //delete rating
     const reviews =  document.querySelectorAll(".review");
-    reviews.forEach((review)=>{
+    const reviewObject = <%-JSON.stringify(game.reviews)%>;
+    console.log(typeof reviewObject, reviewObject)
+    // console.log(typeof reviewText)
+    // const reviewObject = JSON.parse(reviewText);
+    // console.log(typeof reviewObject)
+    // console.log(JSON.parse(reviewObject))
+    reviews.forEach((review, index)=>{
         const revHeadChildren= review.children[0].children;
         const reviewOptions = review.children[1];
         console.log(revHeadChildren)
@@ -153,12 +159,14 @@
         const deleteRevOpt = reviewOptions.children[0];
         deleteRevOpt.addEventListener("click", ()=>{
             const formElem = popupElem.children[0].children[0];
-            formElem.action = "/games/<%=game._id%>/review/delete?_method=DELETE";
+            const reviewId = reviewObject[index]._id;
+            // console.log(`/games/<%=game._id%>/review/${reviewId}?_method=DELETE`)
+            formElem.action = `/games/<%=game._id%>/review/${reviewId}?_method=DELETE`;
             const formText =formElem.children[0];
             formText.textContent  = "Are you sure you want to delete this review";
             popupElem.style.visibility = "visible";
         })
-    })
+    });
     // // const reviewSettings = document.querySelectorAll("#reviewSettings");
     // const showDelForm = document.querySelectorAll("#showReviewDelForm");
 
