@@ -21,17 +21,25 @@ const findNameFromId =  async(reviews)=>{
     }))
     return reviewNames
 }
-
+const errorRoute = (res, error)=>{
+    res.render("error",
+            {error: {
+                message: `${error.message}`, 
+                status: error.code? error.code: 500
+            }}
+        )  
+}
 router.get("/", async(req,res)=>{
     try {
         const games  = await Games.find();
-        res.render("games/index",{games});
+        if(games){
+            res.render("games/index",{games});
+        }else{
+            throw new Error("Couldnt find any game")
+        }
+        
     } catch (error) {
-        console.log(error)
-        res.render("error",{error: {
-                message: "Something went wrong. Please try again later", 
-                status: 500
-            }})   
+        errorRoute(res, error);
     }
     
 });
@@ -39,9 +47,6 @@ router.post("/", isSignedIn, isAdmin, uploadMiddleware, async(req,res)=> {
     console.log(req.body);
     try {
         console.log(req.files)
-        // let gameIconUrl;
-        // let gameBackgroundUrl;
-        // let galleryUrl;
         if(req.files.gameIcon){
             const  uploadResult = await uploadBuffer(req.files.gameIcon[0].buffer)
             console.log(uploadResult)
@@ -57,9 +62,6 @@ router.post("/", isSignedIn, isAdmin, uploadMiddleware, async(req,res)=> {
             console.log(uploadResponses)
             req.body.gallery=uploadResponses.map(response => response.secure_url);
         }
-        // req.body.gameIcon = gameIconUrl;
-        // req.body.gameBackgroundUrl = gameBackgroundUrl;
-        // req.body.gallery =galleryUrl;
         console.log(req.body);
         console.log(typeof req.body.gallery)
         await Games.create(req.body);
@@ -67,13 +69,8 @@ router.post("/", isSignedIn, isAdmin, uploadMiddleware, async(req,res)=> {
         res.redirect("/games");
         
     } catch (error) {
-        console.log(error)
-        res.render("error",
-            {error: {
-                message: "Something went wrong. Please try again later", 
-                status: 500
-            }}
-        )   
+        req.session.error = "Couldnt create game";
+        res.redirect("/games");
     }
 })
 router.get("/new",isSignedIn, isAdmin, (req,res)=>{
@@ -90,16 +87,12 @@ router.get("/:gameId", isSignedIn, async (req,res)=>{
             console.log(reviewNames);
             res.render("games/show", {game, reviewNames});
         }else{
-            throw new Error("Couldnt find the game you were looking for");
+            const error =  new Error("Couldnt find the game you were looking for");
+            error.code = 404;
+            throw error;
         }
-    } catch (error) { 
-        console.log(error);
-        res.render("error",
-            {error: {
-                message: error.message, 
-                status: 404
-            }}
-        );    
+    } catch (error) {
+        errorRoute(res, error);    
     }
     
 });
@@ -118,7 +111,7 @@ router.delete("/:gameId", isSignedIn, isAdmin, async (req,res) => {
     } catch (error) {
         console.log(error);
         req.session.error = `Failed to delete ${req.body.name}.`
-        res.redirect("/games");
+        res.redirect(`/games/${gameId}`);
     }
 })
 router.put("/:gameId", isSignedIn, isAdmin, async (req,res) => {
@@ -132,7 +125,7 @@ router.put("/:gameId", isSignedIn, isAdmin, async (req,res) => {
         res.redirect("/games")
     } catch (error) {
         req.session.error = `Failed to update ${req.body.name}.`
-        res.redirect("/games")
+        res.redirect(`/games/${gameId}`)
     }
     
 })
@@ -144,16 +137,12 @@ router.get("/:gameId/edit", isSignedIn, isAdmin, async (req, res) => {
         if(game){
             res.render("games/edit",{game});
         }else{
-            throw new Error("Couldnt find the game you were looking for")
+            const error = new Error("Couldnt find the game you were looking for");
+            error.code =  404;
+            throw error
         }
     } catch (error) {
-        console.log(error);
-        res.render("error",
-            {error: {
-                message: error.message, 
-                status: 404
-            }}
-        )    
+        errorRoute(res, error);  
     }
 })
 

@@ -5,9 +5,16 @@ import Games from "../models/games.js";
 
 
 const router = express.Router({mergeParams: true});
-router.get("/", (req,res)=>{
-    console.log("here")
-})
+
+const errorRoute = (res, error)=>{
+    res.render("error",
+            {error: {
+                message: `${error.message}`, 
+                status: error.code? error.code: 500
+            }}
+        )  
+}
+
 router.post("/create", isSignedIn, async (req,res) => {
     try {
         const gameId =  req.params.gameId;
@@ -15,46 +22,55 @@ router.post("/create", isSignedIn, async (req,res) => {
         if(game){
             req.body.userId =  req.session.user._id
             game.reviews.push(req.body);
-            game.save(res.redirect(`/games/${gameId}`))
+            await game.save();
+            req.session.message = "Successfully added Review";
+            res.redirect(`/games/${gameId}`)
         }else{
             throw new Error("Couldnt find the game you were looking for ")
         }
        console.log(req.body)    
     } catch (error) {
         // res.redirect("games/690a5169af9d7a690d71ca61/")
-        res.render("error",
-            {error: {
-                message: `${error.message}`, 
-                status: 500
-            }}
-        )   
+        // res.render("error",
+        //     {error: {
+        //         message: `${error.message}`, 
+        //         status: 500
+        //     }}
+        // )   
+        errorRoute(res, error)
     }
 });
 router.delete("/:reviewId", isSignedIn, async (req,res) => {
      try {
-        console.log("here")
         const gameId =  req.params.gameId;
         const game = await Games.findById(gameId);
         if(game){
-            const deleteIndex = game.reviews.findIndex((review)=> review._id == req.params.reviewId);
-            if(deleteIndex){
-                const review = game.reviews[deleteIndex];
-                console.log(review)
+            const deleteReview = game.reviews.find((review)=> review._id == req.params.reviewId);
+            console.log(deleteReview)
+            if(deleteReview){
+                console.log(deleteReview.userId.equals(req.session.user._id) )
+                if(deleteReview.userId.equals(req.session.user._id)){
+                    deleteReview.deleteOne()
+                    await game.save();
+                    req.session.message = "Successfully deleted Review";
+                    res.redirect(`/games/${gameId}`);
+                }else{
+                    const err =  new Error("You are unauthorized to make this request");
+                    err.code = 403;
+                    throw err;
+                }   
             }else{
-                throw new Error("Couldnt find the review you were looking for")
+                const err = Error("Couldnt find the review you were looking for");
+                err.code = 404;
+                throw err;
             }
-            
         }else{
-            throw new Error("Couldnt find the game you were looking for ")
+            const err = Error("Couldnt find the game you were looking for ");
+            err.code = 404;
+            throw err;
         } 
     } catch (error) {
-        // res.redirect("games/690a5169af9d7a690d71ca61/")
-        res.render("error",
-            {error: {
-                message: `${error.message}`, 
-                status: 500
-            }}
-        )   
+         errorRoute(res, error);
     }
 })
 export default router;

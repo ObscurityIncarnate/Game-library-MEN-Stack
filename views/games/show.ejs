@@ -9,10 +9,11 @@
     <title>Document</title>
 </head>
 <body>
+    <%- include("../../partials/_navbar.ejs") %>
     <div id="page-content">
+        <img src="<%= game. %>" alt="">
     <% if(user.isAdmin){ %>
         <a href="/games/<%= game._id%>/Edit">Edit game</a>
-        <a href="/games/<%= game._id%>/review">Add review</a>
         <button type="button" id="delete">Delete game</button>  
     <% } %>
         <h2>Reviews</h2>
@@ -39,7 +40,8 @@
                 <div class="review">
                     <div class="reviewHead">
                         <p><%=reviewNames[review.userId]%></p>
-                        <% if(review.userId == user._id) {%>
+                        <%console.log("review user:", review.userId, "session User", user._id, "equals", review.userId == user._id)  %>
+                        <% if(review.userId.equals(user._id)) {%>
                             <i class="fa fa-ellipsis-v reviewSettings"></i>
 
                         <% } %>
