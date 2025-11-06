@@ -1,0 +1,24 @@
+    <% if(message){ %>
+        <div class="message">
+            <p>
+               <%= message%> 
+            </p>
+            <button class="clearMessage">
+                
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+
+    <% } else if(error){%>
+        <div class="error">
+            <p>
+               <%= error%> 
+            </p>
+            <button class="clearMessage">
+                
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    
+    
+    <% } %> 

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import session from "express-session";
 import morgan from "morgan";
 import "dotenv/config"
+import methodOverride from "method-override"
 import MongoStore from "connect-mongo";
 import authrouter from "./controller/auth.js";
 import profileRouter from "./controller/profile.js";
@@ -18,6 +19,7 @@ const app = express();
 
 
 // Middleware
+app.use(methodOverride("_method"))
 app.use(morgan("dev"))
 app.use(express.urlencoded());
 app.set("view engine", "ejs");

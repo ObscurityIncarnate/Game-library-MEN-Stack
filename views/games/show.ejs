@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheet/style.css">
     <link rel="stylesheet" href="/stylesheet/showGame.css">
+    <script defer src="/js/messagehide.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -16,7 +17,7 @@
     <% } %>
         <h2>Reviews</h2>
         <button type="button" id="addReview">Leave Review</button>
-        <form action="/games/<%=game._id%>/review" method="post" id="reviewForm">
+        <form action="/games/<%=game._id%>/review/create" method="POST" id="reviewForm">
             <textarea name="description" id="">
 
             </textarea>
@@ -35,15 +36,18 @@
         
         <div>
             <% game.reviews.forEach((review)=>{%>
-                <div>
-                    <div>
+                <div class="review">
+                    <div class="reviewHead">
                         <p><%=reviewNames[review.userId]%></p>
                         <% if(review.userId == user._id) {%>
-                            <i class="fa fa-ellipsis-v"></i>
+                            <i class="fa fa-ellipsis-v reviewSettings"></i>
+
                         <% } %>
                     </div>
-                    
-                    <div>
+                    <div class="reviewOptions">
+                        <div id="showReviewDelForm">Delete</div>
+                    </div>
+                    <div class="reviewRating">
                         <% for(let i=0; i<5; i++){ %>
                             <%if(i<review.rating ){%>
                                 <i class="fa fa-star"></i>
@@ -52,7 +56,7 @@
                             } %>
                         <%}%>
                     </div>
-                    <div>
+                    <div class="reviewBody">
                         <p><%=review.description%></p>
                     </div>
                 </div>
@@ -61,8 +65,8 @@
     </div>
     <div id="popup">
         <div class="alert-box">
-            <form action="/games/<%=game._id%>/delete" method="post" id>
-                <p>Are you sure you want to delete this game?</p>
+            <form action="" method="post" id>
+                <p></p>
                 <div class="buttons">
                     <button type="button" id="hide">Cancel</button>
                     <button type="submit">Delete</button>  
@@ -72,12 +76,18 @@
         </div>
         
     </div>
+      <%- include("../../partials/_message.ejs") %>
 </body>
 <script>
     const deleteElem = document.querySelector("#delete");
     const popupElem = document.querySelector("#popup");
     const hideElem = document.querySelector("#hide");
     deleteElem.addEventListener("click", ()=>{
+        const formElem = popupElem.children[0].children[0];
+        
+        formElem.action = "/games/<%=game._id%>?_method=Delete";
+        const formText =  formElem.children[0];
+        formText.textContent = "Are you sure you want to delete this game?";
         popupElem.style.visibility = "visible";
     });  
     hideElem.addEventListener("click", ()=>{
@@ -127,6 +137,40 @@
 
     })
     
+    //delete rating
+    const reviews =  document.querySelectorAll(".review");
+    reviews.forEach((review)=>{
+        const revHeadChildren= review.children[0].children;
+        const reviewOptions = review.children[1];
+        console.log(revHeadChildren)
+        if(revHeadChildren.length >1){
+            const reviewSettings =  revHeadChildren[1];
+            console.log(reviewSettings.style)
+            reviewSettings.addEventListener("click", (event)=>{
+                reviewOptions.style.visibility="visible";
+            })
+        }
+        const deleteRevOpt = reviewOptions.children[0];
+        deleteRevOpt.addEventListener("click", ()=>{
+            const formElem = popupElem.children[0].children[0];
+            formElem.action = "/games/<%=game._id%>/review/delete?_method=DELETE";
+            const formText =formElem.children[0];
+            formText.textContent  = "Are you sure you want to delete this review";
+            popupElem.style.visibility = "visible";
+        })
+    })
+    // // const reviewSettings = document.querySelectorAll("#reviewSettings");
+    // const showDelForm = document.querySelectorAll("#showReviewDelForm");
+
+
+    // reviewSettings.addEventListener("click", (event)=>{
+    //     if(event.target == reviewSettings){
+
+    //     }
+    // })
+
+
+
 
 </script>
 </html>

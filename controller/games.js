@@ -5,10 +5,13 @@ import isSignedIn from "../middleware/is_signed_in.js";
 import { cloudinary, uploadBuffer } from "../config/cloudinary.js";
 import multer from "multer";
 import Users from "../models/users.js";
+import reviewRouter from "./reviews.js";
+
 const router =  express.Router();
 const upload = multer({storage: multer.memoryStorage()});
 const uploadMiddleware = upload.fields([{name: "gameIcon", maxCount: 1}, {name:"backgroundImage", maxCount: 1}, {name: "gallery", maxCount: 8}]);
 
+router.use("/:gameId/review", reviewRouter);
 
 const findNameFromId =  async(reviews)=>{
     const reviewNames = {};
@@ -100,24 +103,8 @@ router.get("/:gameId", isSignedIn, async (req,res)=>{
     }
     
 });
-router.post("/:gameId/review", isSignedIn, async (req,res) => {
-     
-    try {
-        const gameId =  req.params.gameId;
-        const game = await Games.findById(gameId);
-        if(game){
-            req.body.userId =  req.session.user._id
-            game.reviews.push(req.body);
-            game.save(res.redirect(`/games/${gameId}`))
-        }else{
-            throw new Error("Couldnt find the content you were looking for ")
-        }
-       console.log(req.body)    
-    } catch (error) {
-        
-    }
-})
-router.post("/:gameId/delete", isSignedIn, isAdmin, async (req,res) => {
+
+router.delete("/:gameId", isSignedIn, isAdmin, async (req,res) => {
     try {
         const gameId =  req.params.gameId;
         const game =  await Games.findById(gameId);
@@ -133,6 +120,21 @@ router.post("/:gameId/delete", isSignedIn, isAdmin, async (req,res) => {
         req.session.error = `Failed to delete ${req.body.name}.`
         res.redirect("/games");
     }
+})
+router.put("/:gameId", isSignedIn, isAdmin, async (req,res) => {
+    
+    try {
+        const gameId =  req.params.gameId;
+        console.log(req.body);
+        req.body.gallery  = req.body.gallery.split(",");
+        await Games.findByIdAndUpdate(gameId, req.body);
+        req.session.message = `Successfully Updated ${req.body.name}`;
+        res.redirect("/games")
+    } catch (error) {
+        req.session.error = `Failed to update ${req.body.name}.`
+        res.redirect("/games")
+    }
+    
 })
 
 router.get("/:gameId/edit", isSignedIn, isAdmin, async (req, res) => {
@@ -154,19 +156,5 @@ router.get("/:gameId/edit", isSignedIn, isAdmin, async (req, res) => {
         )    
     }
 })
-router.post("/:gameId/edit", isSignedIn, isAdmin, async (req,res) => {
-    
-    try {
-        const gameId =  req.params.gameId;
-        console.log(req.body);
-        req.body.gallery  = req.body.gallery.split(",");
-        await Games.findByIdAndUpdate(gameId, req.body);
-        req.session.message = `Successfully Updated ${req.body.name}`;
-        res.redirect("/games")
-    } catch (error) {
-        req.session.error = `Failed to update ${req.body.name}.`
-        res.redirect("/games")
-    }
-    
-})
+
 export default router 

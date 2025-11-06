@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheet/style.css">
     <link rel="stylesheet" href="/stylesheet/gameIndex.css">
+    <script defer src="/js/messagehide.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -55,14 +56,4 @@
     
     <% } %>   
 </body>
-<script>
-    const clearButton = document.querySelector("#clearMessage");
-    const divElem = document.querySelector("#message");
-    if(clearButton){
-        clearButton.addEventListener("click", ()=>{
-            divElem.style.visibility =  "hidden";
-        })
-    }
-    
-</script>
 </html>

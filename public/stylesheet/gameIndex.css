@@ -7,13 +7,7 @@
 .gameBackground{
     height: 50%;
 }
-#message{
-    position: fixed;
-    z-index: 2;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    bottom: 50px;
-}
+
 
 #games{
     display: flex;
