@@ -14,7 +14,7 @@
         <% if(game.backgroundImage){ %>
         <img src="<%= game.backgroundImage %>" class="gameBackground">
         <% } %>
-        <%- include("../../partials/_navbar.ejs") %>
+        <%- include("./../partials/_navbar.ejs") %>
         <h1><%=game.name%></h1>
         <h3><%= !isNaN(averageScore)? averageScore:0 %>/5 <i class="fa fa-star starSelector"></i></h3>
         <p><%= reviewCount ? `From ${reviewCount} reviews` : "Be the first to leave a review" %> </p>
@@ -91,7 +91,7 @@
         </div>
 
     </section>
-    <%- include("../../partials/_deletePopup.ejs")  %>
+    <%- include("./../partials/_deletePopup.ejs")  %>
 </body>
 <%if(user){%>
     <script>
