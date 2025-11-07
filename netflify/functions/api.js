@@ -1,0 +1,55 @@
+import express from "express";
+import mongoose from "mongoose";
+import session from "express-session";
+import serverless from 'serverless-http'
+import morgan from "morgan";
+import "dotenv/config"
+import methodOverride from "method-override"
+import MongoStore from "connect-mongo";
+import authrouter from "../../controller/auth.js";
+import profileRouter from "../../controller/profile.js";
+import gameRouter from "../../controller/games.js";
+import users from "../../models/users.js";
+import Games from "../../models/games.js"; 
+import Profiles from "../../models/profiles.js";
+import passUserToRoutes from "../../middleware/pass_user_to_view.js";
+import passErrorToView from "../../middleware/pass_error_to_view.js";
+import passMessageToView from "../../middleware/pass_message_to_view.js";
+const app = express();
+
+
+
+// Middleware
+app.use(methodOverride("_method"))
+app.use(morgan("dev"))
+app.use(express.urlencoded());
+app.set("view engine", "ejs");
+app.use(express.static("public"));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI })
+}));
+
+app.use(passUserToRoutes);
+app.use(passErrorToView);
+app.use(passMessageToView)
+const connect = ()=>{
+    try {
+        mongoose.connect(process.env.MONGODB_URI);
+        console.log("🔒Connection to Database Establised");
+    } catch (error) {
+        console.log("🚨Failed to connect to Database🚨");
+    }
+}
+connect();
+app.get("/", (req, res)=>{
+    res.render("index")
+})
+app.use("/auth", authrouter);
+app.use("/profile", profileRouter);
+app.use("/games", gameRouter);
+//server startup
+
+export const handler = serverless(app)

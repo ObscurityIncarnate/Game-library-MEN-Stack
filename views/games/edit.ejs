@@ -39,7 +39,10 @@
             <div class= "form-elem" id="gallery-div">
                 <label for="gallery">More media </label>
                 <input type="file" name="gallery" id="gallery-input" accept="image/*" multiple>
-                <button type="button">Remove all</button>
+                <div id="removePreviews">
+                    <p>Remove more media <i class="fa fa-trash"></i></p>
+                    
+                </div>
             </div>
             <button type="submit">Submit</button>
 
@@ -54,6 +57,7 @@
 <script>
     const game =  <%-JSON.stringify(game)%>;
     const iconDiv = document.querySelector("#iconDiv");
+
     if(game.gameIcon){
         const preview = iconDiv.children[1];
         preview.style.display = "block";
@@ -142,5 +146,6 @@
             
         })
     })
+    
 </script>
 </html>
