@@ -36,6 +36,7 @@
     <% } %>
     <section id="reviews">
         <h2>Reviews</h2>
+        <% if(user){ %>
         <button type="button" id="addReview">Leave Review</button>
         <form action="/games/<%=game._id%>/review/create" method="POST" id="reviewForm">
             <label for="description">Please enter your thoughts on the game</label>
@@ -57,7 +58,7 @@
             </div>
             
         </form>
-      
+        <% } %>
         <div class="reviews">
             <% game.reviews.forEach((review)=>{%>
                 <div class="review">
