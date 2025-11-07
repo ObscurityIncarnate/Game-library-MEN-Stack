@@ -16,14 +16,11 @@
             <% games.forEach(game => {%>
                 <a href="/games/<%= game._id %>">
                     <div class="gameContainer">
-                        <div class="gameBackground">
-                            <img src="<%= game.backgroundImage %>" alt="">
-                        </div>
-                        <div>
+                        <!-- <div> -->
                             <img class="logo" src="<%= game.gameIcon %>" alt="Logo of the game <%= game.name %>">
                             <p><%= game.name %></p>
                             
-                        </div>
+                        <!-- </div> -->
                     </div>
                 </a>
             <%}); %>

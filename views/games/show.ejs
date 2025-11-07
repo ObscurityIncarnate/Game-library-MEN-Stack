@@ -9,13 +9,30 @@
     <title>Document</title>
 </head>
 <body>
-    <%- include("../../partials/_navbar.ejs") %>
-    <div id="page-content">
-        <img src="<%= game.backgroundImage %>" alt="">
+    
+    <div id="design"> 
+        <img src="<%= game.backgroundImage %>" class="gameBackground">
+        <%- include("../../partials/_navbar.ejs") %>
+        <h1><%=game.name%></h1>
+        <h3><%= !isNaN(averageScore)? averageScore:0 %>/5 <i class="fa fa-star starSelector"></i></h3>
+        <p><%= reviewCount ? `From ${reviewCount} reviews` : "Be the first to leave a review" %> </p>
         <% if(user && user.isAdmin){ %>
             <a href="/games/<%= game._id%>/Edit">Edit game</a>
             <button type="button" id="delete">Delete game</button>  
         <% } %>
+    </div>
+    <% if(game.gallery && game.gallery.length>0){ %>
+    <section id="gallery">
+        <img src="" alt="" class ="galleryBackground">
+        <h2>Gallery</h2>
+        <div class="imageButtons">
+            <i class="fa fa-arrow-circle-left previousImage"></i>
+            <i class="fa fa-arrow-circle-right nextImage"></i> 
+        </div>
+              
+    </section>
+    <% } %>
+    <section id="reviews">
         <h2>Reviews</h2>
         <button type="button" id="addReview">Leave Review</button>
         <form action="/games/<%=game._id%>/review/create" method="POST" id="reviewForm">
@@ -24,8 +41,8 @@
             </textarea>
             <input type="number" id="ratingInput" name="rating"  max="5" min="1" value="1" required>
             <div>
-                <p>How much would you recommend</p>
-                <i class="fa fa-star-o starSelector"></i>
+                <p>How much would you rate this game</p>
+                <i class="fa fa-star starSelector"></i>
                 <i class="fa fa-star-o starSelector"></i>
                 <i class="fa fa-star-o starSelector"></i>
                 <i class="fa fa-star-o starSelector"></i>
@@ -34,7 +51,7 @@
             <button type="button" id="hideForm"> Cancel</button>
             <button type="submit">Submit</button>
         </form>
-        
+      
         <div class="reviews">
             <% game.reviews.forEach((review)=>{%>
                 <div class="review">
@@ -44,11 +61,8 @@
                             <%console.log("review user:", review.userId, "session User", user._id, "equals", review.userId == user._id)  %>
                             <% if(review.userId.equals(user._id)) {%>
                                 <i class="fa fa-ellipsis-v reviewSettings"></i>
-
                             <% } %>
-
                         <%} %>
-                        
                     </div>
                     <div class="reviewOptions">
                         <div id="showReviewDelForm">Delete</div>
@@ -68,21 +82,9 @@
                 </div>
             <%}) %>
         </div>
-    </div>
-    <div id="popup">
-        <div class="alert-box">
-            <form action="" method="post" id>
-                <p></p>
-                <div class="buttons">
-                    <button type="button" id="hide">Cancel</button>
-                    <button type="submit">Delete</button>  
-                </div>
-            
-            </form>
-        </div>
-        
-    </div>
-      <%- include("../../partials/_message.ejs") %>
+    </section>
+    <%- include("../../partials/_deletePopup.ejs")  %>
+    <%- include("../../partials/_message.ejs") %>
 </body>
 <%if(user){%>
     <script>
@@ -91,7 +93,6 @@
     const hideElem = document.querySelector("#hide");
     deleteElem.addEventListener("click", ()=>{
         const formElem = popupElem.children[0].children[0];
-        
         formElem.action = "/games/<%=game._id%>?_method=Delete";
         const formText =  formElem.children[0];
         formText.textContent = "Are you sure you want to delete this game?";
@@ -101,7 +102,6 @@
         popupElem.style.visibility = "hidden";
     });
     popupElem.addEventListener("click", (event)=>{
-        console.log()
         if(event.target.id == "popup"){
             popupElem.style.visibility = "hidden";
         }        
@@ -118,7 +118,26 @@
         reviewForm.style.display = "none";
         reviewButton.style.display = "block";
     })
-
+    //gallery
+    const gallerySec =  document.querySelector("#gallery");
+    const gallery =  <%-JSON.stringify(game.gallery)%>;
+    if(gallery.length>0){
+        console.log(gallery);
+        const nextImage =  document.querySelector(".nextImage");
+        const previousImage = document.querySelector(".previousImage");
+        let currentImage= Math.floor(Math.random()*gallery.length);
+        const imgElem  =gallerySec.children[0];
+        imgElem.src  =  gallery[currentImage];
+        nextImage.addEventListener("click", ()=>{
+            console.log((currentImage+1)%gallery.length)
+            currentImage = (currentImage+1)%gallery.length;
+            imgElem.src  =  gallery[currentImage];
+        }); 
+        previousImage.addEventListener("click", ()=>{
+            currentImage = (currentImage-1)%gallery.length;
+            imgElem.src  =  gallery[currentImage];
+        }); 
+    }
 
     //rating
     const ratingInput = document.querySelector("#ratingInput");
@@ -162,10 +181,12 @@
             console.log(reviewSettings.style)
             reviewSettings.addEventListener("click", (event)=>{
                 reviewOptions.style.visibility="visible";
+                
             })
         }
         const deleteRevOpt = reviewOptions.children[0];
-        deleteRevOpt.addEventListener("click", ()=>{
+        deleteRevOpt.addEventListener("click", (event)=>{
+            console.log("click")
             const formElem = popupElem.children[0].children[0];
             const reviewId = reviewObject[index]._id;
             // console.log(`/games/<%=game._id%>/review/${reviewId}?_method=DELETE`)

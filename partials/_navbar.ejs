@@ -1,23 +1,22 @@
 <nav>
     <div>
-    <a href="/games">Browse Collections</a>
-    <a href="">Search Profiles</a>
-    <% if(user){ %>
-    <a href=""> Favourites</a>
-        <% if(user.isAdmin) {%>
-            <a href="/games/new">New Game</a>
+        <a href="/">Home Page</a>
+        <a href="/games">Browse Collections</a>
+        <% if(user && user.isAdmin){ %>
+        <!-- <a href=""> Favourites</a> -->
+        <a href="/games/new">New Game</a>
         <% } %>
     </div>
-    <div>
+    <div >
+    <%if(user){%>
+    
     <a href="/auth/sign-out">Sign out</a>
     <a href="/profile">Profile</a> 
-    </div>
+
     <% }else{ %>
-    </div>
-    <div>
+
     <a href="/auth/sign-in">Sign In</a>
     <a href="/auth/sign-up">Sign Up</a>
-    </div>
-    
     <% } %>
+    </div>
 </nav>

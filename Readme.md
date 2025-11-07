@@ -7,6 +7,7 @@ Updating games
 Deleteing games
 Flash messages
 game reviews
+previews
 ## Additional features
 Profiles
 profile picture 

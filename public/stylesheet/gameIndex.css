@@ -1,16 +1,19 @@
 @import url('../font-awesome-4.7.0/css/font-awesome.min.css');
 .gameContainer{
-    width: 250px;
-    height: 250px;
-    border: 1px solid black ;
+    width: 275px;
+    min-height: 175px;
+    /* border: 1px solid black ; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
 }
-.gameBackground{
-    height: 50%;
-}
-
 
 #games{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 15px;
+    margin: 0 auto;
 }

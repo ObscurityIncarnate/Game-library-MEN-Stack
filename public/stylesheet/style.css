@@ -1,7 +1,13 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
 nav{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    height: 60px;
 }
 
 #page-content{
@@ -12,7 +18,7 @@ nav{
     display: flex;
     flex-direction: row;
     border-radius: 15px;
-    border: 3px solid black;
+    border: 2px solid black;
     gap: 5px;
     position: fixed;
     z-index: 2;

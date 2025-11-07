@@ -55,7 +55,7 @@ router.post("/", isSignedIn, isAdmin, uploadMiddleware, async(req,res)=> {
         if(req.files.backgroundImage){
             const  uploadResult = await uploadBuffer(req.files.backgroundImage[0].buffer)
             console.log(uploadResult)
-            req.body.gameBackgroundUrl = uploadResult.secure_url;
+            req.body.backgroundImage = uploadResult.secure_url;
         }
         if(req.files.gallery && req.files.gallery.length > 0){
             const uploadResponses =  await Promise.all(req.files.gallery.map(imageFile => uploadBuffer(imageFile.buffer)));
@@ -83,9 +83,15 @@ router.get("/:gameId", async (req,res)=>{
         const game = await Games.findById(gameId);
         if(game){
             console.log(game)
-            const reviewNames = await findNameFromId(game.reviews)
-            console.log(reviewNames);
-            res.render("games/show", {game, reviewNames});
+            const reviewNames = await findNameFromId(game.reviews);
+            let reviewCount = 0;
+            let totalStars = 0;
+            game.reviews.forEach((review)=>{
+                reviewCount++;
+                totalStars+=review.rating;
+            })
+            console.log(reviewNames, reviewCount, totalStars);
+            res.render("games/show", {game, reviewNames, reviewCount, averageScore: (totalStars/reviewCount).toFixed(2)});
         }else{
             const error =  new Error("Couldnt find the game you were looking for");
             error.code = 404;
@@ -119,7 +125,7 @@ router.put("/:gameId", isSignedIn, isAdmin,uploadMiddleware, async (req,res) => 
     const gameId =  req.params.gameId;
     try {
     
-        console.log(req.files)
+        console.log(req.files.backgroundImage)
         if(req.files.gameIcon){
             const  uploadResult = await uploadBuffer(req.files.gameIcon[0].buffer)
             console.log(uploadResult)
@@ -128,7 +134,7 @@ router.put("/:gameId", isSignedIn, isAdmin,uploadMiddleware, async (req,res) => 
         if(req.files.backgroundImage){
             const  uploadResult = await uploadBuffer(req.files.backgroundImage[0].buffer)
             console.log(uploadResult)
-            req.body.gameBackgroundUrl = uploadResult.secure_url;
+            req.body.backgroundImage = uploadResult.secure_url;
         }
         if(req.files.gallery && req.files.gallery.length > 0){
             const uploadResponses =  await Promise.all(req.files.gallery.map(imageFile => uploadBuffer(imageFile.buffer)));

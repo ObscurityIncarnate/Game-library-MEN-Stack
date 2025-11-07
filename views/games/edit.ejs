@@ -8,11 +8,10 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>
-        Edit game
-    </h1>
     <div class="container">
-        
+        <h1>
+            Edit game
+        </h1>
         <form action="/games/<%= game._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
             <div class="form-elem" id="nameDiv">
                 <label for="name">Game Name</label>
@@ -40,14 +39,14 @@
             <div class= "form-elem" id="gallery-div">
                 <label for="gallery">More media </label>
                 <input type="file" name="gallery" id="gallery-input" accept="image/*" multiple>
+                <button type="button">Remove all</button>
             </div>
-            <div class="form-elem">
-                <button type="button" id="addMedia">Add another image</button>
-            </div>
-            
             <button type="submit">Submit</button>
 
         </form>
+
+    </div>
+    <div id="decoration">
 
     </div>
     <%- include("../../partials/_message.ejs") %>
@@ -97,56 +96,51 @@
 
 
 
-
-    console.log(iconDiv, backgroundImageDiv);
+    const divElem =  document.querySelector("#gallery-div");
+    
+    if(game.gallery && game.gallery.length>0){
+        game.gallery.forEach((image)=>{
+            const preview = document.createElement("div");
+            preview.classList.add("preview");
+            preview.style.display = "block";
+            const img = document.createElement("img");
+            img.src = image;
+            img.alt = "Game images"
+            img.style = "max-width: 150px; display: block";
+            preview.append(img);
+            divElem.appendChild(preview);
+        })
+    }
 
     const inputElem = document.querySelector("#gallery-input");
-    const divElem =  document.querySelector("#gallery-div")
-    const buttonElem = document.querySelector("#addMedia");
-    let gallery = '<%=game.gallery%>' ;
-    gallery = gallery.split(",")
-    console.log( gallery)
-    gallery.forEach((image) => {
-        const newMedia = document.createElement("div");
-        newMedia.textContent = image;
-        newMedia.classList.add("imageLink")
-        const buttonIcon = document.createElement("i");
-        buttonIcon.classList.add("fa","fa-trash");
-        buttonIcon.ariaHidden=true;
-        newMedia.addEventListener("click", ()=>{
-            newMedia.remove()
-            const border = gallery.indexOf(newMedia.textContent);
-            gallery.splice(border, 1);
-            console.log(gallery)
-        })
-        newMedia.append(buttonIcon);
-        divElem.append(newMedia);
-    });
-    buttonElem.addEventListener("click",()=>{
-        console.log(inputElem.value);
-        if(inputElem.value ==""){
-            return;
+    divElem.children[2].addEventListener("click",()=>{
+        inputElem.value = "";
+        for (let index = 0; index < divElem.children.length; index++) {
+            const element = divElem.children[index];
+            if(element.classList.contains("preview")){
+                element.remove();
+            }
+            
         }
-        const newMedia = document.createElement("div");
-        newMedia.textContent = inputElem.value;
-        newMedia.classList.add("imageLink")
-        const buttonIcon = document.createElement("i");
-        buttonIcon.classList.add("fa","fa-trash");
-        buttonIcon.ariaHidden=true;
-        newMedia.addEventListener("click", ()=>{
-            newMedia.remove()
-            const border = gallery.indexOf(newMedia.textContent);
-            gallery.splice(border, 1);
-            console.log(gallery)
+    })
+    inputElem.addEventListener("change",()=>{
+        console.log(Array.from(inputElem.files))
+        Array.from(inputElem.files).forEach((file)=>{
+            const preview = document.createElement("div");
+            preview.classList.add("preview");
+            preview.style.display = "block";
+            const img = document.createElement("img");
+            if(file){
+                img.src = URL.createObjectURL(file);
+                console.log(img.src)
+                img.alt = "Game images";
+                img.style = "max-width: 150px; display: block";
+                preview.append(img);
+                divElem.appendChild(preview);
+                console.log(divElem)
+            }
+            
         })
-        newMedia.append(buttonIcon);
-        divElem.append(newMedia);
-        gallery.push(inputElem.value);
-        inputElem.value = "";   
-    });
-    const submitElem = document.querySelector("button[type='Submit']");
-    submitElem.addEventListener("click", ()=>{
-        inputElem.value = gallery
     })
 </script>
 </html>
