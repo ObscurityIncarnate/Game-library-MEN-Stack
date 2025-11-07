@@ -11,7 +11,9 @@
 <body>
     
     <div id="design"> 
+        <% if(game.backgroundImage){ %>
         <img src="<%= game.backgroundImage %>" class="gameBackground">
+        <% } %>
         <%- include("../../partials/_navbar.ejs") %>
         <h1><%=game.name%></h1>
         <h3><%= !isNaN(averageScore)? averageScore:0 %>/5 <i class="fa fa-star starSelector"></i></h3>
@@ -22,21 +24,22 @@
         <% } %>
     </div>
     <% if(game.gallery && game.gallery.length>0){ %>
-    <section id="gallery">
-        <img src="" alt="" class ="galleryBackground">
-        <h2>Gallery</h2>
-        <div class="imageButtons">
-            <i class="fa fa-arrow-circle-left previousImage"></i>
-            <i class="fa fa-arrow-circle-right nextImage"></i> 
-        </div>
-              
-    </section>
+        <section id="gallery">
+            <img src="" alt="" class ="galleryBackground">
+            <h2>Gallery</h2>
+            <div class="imageButtons">
+                <i class="fa fa-arrow-circle-left previousImage"></i>
+                <i class="fa fa-arrow-circle-right nextImage"></i> 
+            </div>
+                
+        </section>
     <% } %>
     <section id="reviews">
         <h2>Reviews</h2>
         <button type="button" id="addReview">Leave Review</button>
         <form action="/games/<%=game._id%>/review/create" method="POST" id="reviewForm">
-            <textarea name="description" id="">
+            <label for="description">Please enter your thoughts on the game</label>
+            <textarea name="description" id="reviewInput">
 
             </textarea>
             <input type="number" id="ratingInput" name="rating"  max="5" min="1" value="1" required>
@@ -48,8 +51,11 @@
                 <i class="fa fa-star-o starSelector"></i>
                 <i class="fa fa-star-o starSelector"></i>
             </div>
-            <button type="button" id="hideForm"> Cancel</button>
-            <button type="submit">Submit</button>
+            <div>
+                <button type="button" id="hideForm"> Cancel</button>
+                <button type="submit">Submit</button>
+            </div>
+            
         </form>
       
         <div class="reviews">
@@ -82,9 +88,9 @@
                 </div>
             <%}) %>
         </div>
+
     </section>
     <%- include("../../partials/_deletePopup.ejs")  %>
-    <%- include("../../partials/_message.ejs") %>
 </body>
 <%if(user){%>
     <script>
@@ -96,14 +102,14 @@
         formElem.action = "/games/<%=game._id%>?_method=Delete";
         const formText =  formElem.children[0];
         formText.textContent = "Are you sure you want to delete this game?";
-        popupElem.style.visibility = "visible";
+        popupElem.style.display = "flex";
     });  
     hideElem.addEventListener("click", ()=>{
-        popupElem.style.visibility = "hidden";
+        popupElem.style.display = "none";
     });
     popupElem.addEventListener("click", (event)=>{
         if(event.target.id == "popup"){
-            popupElem.style.visibility = "hidden";
+            popupElem.style.display = "none";
         }        
     })
 
@@ -111,7 +117,7 @@
     const reviewForm = document.querySelector("#reviewForm");
     const hideForm =  document.querySelector("#hideForm")
     reviewButton.addEventListener("click", ()=>{
-        reviewForm.style.display=  "block";
+        reviewForm.style.display=  "flex";
         reviewButton.style.display = "none";
     });
     hideForm.addEventListener("click", ()=>{
@@ -193,21 +199,23 @@
             formElem.action = `/games/<%=game._id%>/review/${reviewId}?_method=DELETE`;
             const formText =formElem.children[0];
             formText.textContent  = "Are you sure you want to delete this review";
-            popupElem.style.visibility = "visible";
+            popupElem.style.display = "flex";
         })
-    });
-    // // const reviewSettings = document.querySelectorAll("#reviewSettings");
-    // const showDelForm = document.querySelectorAll("#showReviewDelForm");
-
-
-    // reviewSettings.addEventListener("click", (event)=>{
-    //     if(event.target == reviewSettings){
-
-    //     }
-    // })
-
-
-
+    })
+    const backgroundImage = "<%=game.backgroundImage%>";
+    console.log(backgroundImage)
+    if(!backgroundImage || backgroundImage == ""){
+        
+        const designSection  = document.querySelector("#design");
+        const a_elements = document.querySelectorAll("a");
+        designSection.style.color = "black"; 
+        a_elements.forEach(a=>a.style.color = "black");
+        
+    }
+    if(gallery[0]==""){
+        const gallerySection  = document.querySelector("#gallery");
+        gallerySection.style.color =  "black";
+    }
 
 </script>    
 <%}%>

@@ -4,12 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="stylesheet/style.css">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="/stylesheet/index-page.css">
 </head>
 <body>
     <%- include("../partials/_navbar.ejs") %>
-    <% if(user) {%>
-    <h1>Hello <%=user.username  %></h1>
-    <% } %>
+        <div class="page-content">
+            <div class="typewriter">
+                <h1 id="Greeting"> </h1>
+                <span id = cursor>|</span>
+            </div>
+            <a class="gameButton" href="/games">
+                CHECK OUT OUR GAME COLLECTION
+            </a>
+        </div>
+
+        
 </body>
+<script>
+    let i = 0;
+    let txt = "Hello!"; 
+    const speed = 500; 
+    document.querySelector("gameButton")
+    function typeWriter() {
+        if (i < txt.length) {
+            document.getElementById("Greeting").innerHTML += txt.charAt(i);
+            i++;
+            setTimeout(typeWriter, speed);
+        }
+    }
+    window.addEventListener("load", (event) => {
+        typeWriter();
+    });
+</script>
 </html>

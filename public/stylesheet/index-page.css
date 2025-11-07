@@ -1,0 +1,41 @@
+body{
+    height: 100vh;
+}
+
+h1{
+    font-size:  15rem;
+}
+
+#cursor{
+    display: inline-block;
+    font-size: 15rem;
+    color: yellow;
+    animation: blink 0.5s steps(1, end) infinite ;
+    margin-left: 5px;
+}
+@keyframes blink {
+    50%{
+        opacity: 0;
+    }
+}
+.typewriter{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* height: 50%; */
+}
+.page-content{
+    /* height: 80%; */
+    display:  flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameButton{
+    justify-self: center;
+    border: 4px  solid black ;
+    padding: 16px;
+    text-decoration: none;
+    color: black;
+}
