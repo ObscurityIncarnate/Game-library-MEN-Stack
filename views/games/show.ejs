@@ -125,25 +125,7 @@
         reviewButton.style.display = "block";
     })
     //gallery
-    const gallerySec =  document.querySelector("#gallery");
-    const gallery =  <%-JSON.stringify(game.gallery)%>;
-    if(gallery.length>0){
-        console.log(gallery);
-        const nextImage =  document.querySelector(".nextImage");
-        const previousImage = document.querySelector(".previousImage");
-        let currentImage= Math.floor(Math.random()*gallery.length);
-        const imgElem  =gallerySec.children[0];
-        imgElem.src  =  gallery[currentImage];
-        nextImage.addEventListener("click", ()=>{
-            console.log((currentImage+1)%gallery.length)
-            currentImage = (currentImage+1)%gallery.length;
-            imgElem.src  =  gallery[currentImage];
-        }); 
-        previousImage.addEventListener("click", ()=>{
-            currentImage = (currentImage-1)%gallery.length;
-            imgElem.src  =  gallery[currentImage];
-        }); 
-    }
+    
 
     //rating
     const ratingInput = document.querySelector("#ratingInput");
@@ -219,5 +201,25 @@
 
 </script>    
 <%}%>
-
+<script>
+    const gallerySec =  document.querySelector("#gallery");
+    const gallery =  <%-JSON.stringify(game.gallery)%>;
+    if(gallery.length>0){
+        console.log(gallery);
+        const nextImage =  document.querySelector(".nextImage");
+        const previousImage = document.querySelector(".previousImage");
+        let currentImage= Math.floor(Math.random()*gallery.length);
+        const imgElem  =gallerySec.children[0];
+        imgElem.src  =  gallery[currentImage];
+        nextImage.addEventListener("click", ()=>{
+            console.log((currentImage+1)%gallery.length)
+            currentImage = (currentImage+1)%gallery.length;
+            imgElem.src  =  gallery[currentImage];
+        }); 
+        previousImage.addEventListener("click", ()=>{
+            currentImage = (currentImage-1)%gallery.length;
+            imgElem.src  =  gallery[currentImage];
+        }); 
+    }
+</script>
 </html>
